@@ -37,11 +37,11 @@ function bfi_project_review_rules_action_info() {
 			),
 		),
 
-		'bfi_project_review_action_add_fc_rev_id' => array(
-			'label' => t('Add Revision ID to transferred Field Collection on Entityform Submission'),
+		'bfi_project_review_action_copy_field_coll_to_node' => array(
+			'label' => t('Copy Field Collection from Entityform to Node'),
 			'group' => t('BFI Custom'),
 			'parameter' => array(
-				'entityform' => array(			// Name of the parameter to be supplied via Rules UI
+				'source' => array(			// Name of the parameter to be supplied via Rules UI
 					'type' => 'entityform',		// Specifying type of entity to be passed
 					'label' => t('Origin Entityform'),
 					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
@@ -49,6 +49,11 @@ function bfi_project_review_rules_action_info() {
 				'node' => array(			// Name of the parameter to be supplied via Rules UI
 					'type' => 'node',		// Specifying type of entity to be passed
 					'label' => t('Recipient Node'),
+					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
+				),
+				'field' => array(			// Name of the parameter to be supplied via Rules UI
+					'type' => 'field_collection_item',		// Specifying type of entity to be passed
+					'label' => t('Desired Collection'),
 					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
 				),
 			),
@@ -84,8 +89,7 @@ function bfi_project_review_tally_criteria(&$field) {
 
 function bfi_project_review_set_averages(&$field, $cumulative, $count) {
 	$average = $cumulative/(10*$count);
-	$field->set($average);
-	return $average;	
+	$field->set($average);	
 }
 
 function bfi_project_review_average_criteria_scores(&$project, $round) {
@@ -113,17 +117,16 @@ function bfi_project_review_average_criteria_scores(&$project, $round) {
 	$wrap_count = count($wraps);
 
 	// Tallying up criteria scores
-	$cum_vis = $cum_comp = $cum_antic = $cum_ecol = $cum_feas = $cum_verif = $cum_rep = 0;
-	foreach($wraps as $key => $value) {
-		$cum_vis += bfi_project_review_tally_criteria($value->field_project_review_score_vis);
-		$cum_comp += bfi_project_review_tally_criteria($value->field_project_review_score_comp);
-		$cum_antic += bfi_project_review_tally_criteria($value->field_project_review_score_antic);
-		$cum_ecol += bfi_project_review_tally_criteria($value->field_project_review_score_ecol);
-		$cum_feas += bfi_project_review_tally_criteria($value->field_project_review_score_feas);
-		$cum_verif += bfi_project_review_tally_criteria($value->field_project_review_score_verif);
-		$cum_rep += bfi_project_review_tally_criteria($value->field_project_review_score_rep);
+	$scores_cum = array();
+	foreach ($wraps as $key => $eval) {					// Loop through evaluations
+		foreach ($eval as $field => $value) {			// Loop through fields
+			if(substr($field, 0, 26) == 'field_project_review_score') {			// Save score values to cumulative array
+				$bitlet = substr($field, 27);
+				if (isset($scores_cum[$bitlet])) $scores_cum[$bitlet] += bfi_project_review_tally_criteria($value);
+				else $scores_cum[$bitlet] = 0;
+			}
+		}
 	}
-
 
 	// If Average for round ($round - 1) already exists, update it
 	if (isset($project->field_project_review_score_rds[LANGUAGE_NONE][$round - 1])) {		// Borrowing from http://www.rajanmayekar.com/blog/programmatically-creating-deleting-modifying-field-collection-item-node and https://drupal.org/node/1106182
@@ -136,16 +139,14 @@ function bfi_project_review_average_criteria_scores(&$project, $round) {
 	}
 	$score_coll_wrapper = entity_metadata_wrapper('field_collection_item', reset($score_coll));
 	$score_coll_wrapper->field_project_round_eval->set($round);
-	$ave_vis = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_vis, $cum_vis, $wrap_count);
-	$ave_comp = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_comp, $cum_comp, $wrap_count);
-	$ave_antic = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_antic, $cum_antic, $wrap_count);
-	$ave_ecol = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_ecol, $cum_ecol, $wrap_count);
-	$ave_feas = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_feas, $cum_feas, $wrap_count);
-	$ave_verif = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_verif, $cum_verif, $wrap_count);
-	$ave_rep = bfi_project_review_set_averages($score_coll_wrapper->field_project_review_ave_rep, $cum_rep, $wrap_count);
+	foreach ($score_coll_wrapper as $field => $value) {		// Loop through fields
+		if (substr($field, 0, 24) == 'field_project_review_ave') {			// Save average values
+			bfi_project_review_set_averages($value, $scores_cum[substr($field, 25)], $wrap_count);
+		}
+	}
+	dpm($project->field_project_reviewers);
 	$score_coll_wrapper->save();		// Relation add has issues with this for some reason - figure it out!
 }
-
 
 /*
  * Setting Review Round submissions register per user, per round. The vars then determine if the review note form is visible later.
@@ -182,11 +183,22 @@ function bfi_project_review_action_review_in($project) {
 
 }
 
-function bfi_project_review_action_add_fc_rev_id($entityform, $node) {
-	$entityform_wrapper = entity_metadata_wrapper('entityform', $entityform->entityform_id);
-	if (isset($entityform_wrapper->field_application_questions)) {
-		$node->field_application_questions[LANGUAGE_NONE][0]['revision_id'] = $node->field_application_questions[LANGUAGE_NONE][0]['value'];
-		node_save($node);
+function bfi_project_review_action_copy_field_coll_to_node($source, $node, $field) {
+	$field_to_get_name = $field->field_name;
+	if (isset($source->$field_to_get_name)) {
+		$field_to_get = $source->$field_to_get_name;
+		$field_to_get_id = $field_to_get[LANGUAGE_NONE][0]['value'];
+		$field_coll_form = entity_load('field_collection_item', array($field_to_get_id));
+
+		$field_coll_node = entity_create('field_collection_item', array('field_name' => $field_to_get_name));
+		$field_coll_node->setHostEntity('node', $node);
+
+		foreach ($field_coll_form[$field_to_get_id] as $key => $value) {
+			if (substr($key, 0, 6) == 'field_') {
+				$field_coll_node->$key = $value;
+			}
+		}
+		$field_coll_node->save();
 	}
 }
 
@@ -202,7 +214,6 @@ function bfi_project_review_action_dpm_project() {
 	if ($node->type == 'project') {
 		dpm($node);
 	}
-
 }
 
 
