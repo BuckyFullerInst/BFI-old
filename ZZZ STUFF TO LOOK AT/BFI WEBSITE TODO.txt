@@ -7,10 +7,10 @@ FOR TRIMTAB:
 - figure out how to export to html email
 
 FOR BF CHALLENGE REVIEW PROCESS:
+- figure out workflow for payment of fee via paypal
 - make review dashboards for reviewers and bcc admin
 - make vbo way to bulk add reviewers to projects in dashboards
 - tweak access permissions, etc.
-- make function for assigning accepted applicant new (or pre-existing) user account
 
-OVERALL
-- get location zip codes installed
+META
+- reconfigure github branches - remove native_crm option (take out commerce, cdm core, etc… going with civicrm for now) but keep HTML, MIME Mail
