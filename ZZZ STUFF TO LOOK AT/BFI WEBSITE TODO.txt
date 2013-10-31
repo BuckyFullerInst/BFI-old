@@ -11,6 +11,9 @@ FOR BF CHALLENGE REVIEW PROCESS:
 - make review dashboards for reviewers and bcc admin
 - make vbo way to bulk add reviewers to projects in dashboards
 - tweak access permissions, etc.
+- make actions to assign reviewers, set round, and etc.
 
-META
-- reconfigure github branches - remove native_crm option (take out commerce, cdm core, etc… going with civicrm for now) but keep HTML, MIME Mail
+META TO DO
+- figure out exporting HTML emails for CiviCRM
+- figure out payment for Challenge
+- start building backend for Idea Index
