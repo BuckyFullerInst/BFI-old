@@ -51,7 +51,8 @@ div.view-bfc-project-review-form-block div.entityform-type-entityform-type {
 }
 
 div#payment-method-wrapper table tr.payment-line_item-total,
-div#payment-method-wrapper div#edit-field-payment-type {
+div#payment-method-wrapper div.field-name-field-payment-type,
+div#payment-method-wrapper div.field-name-field-payment-app-id {
   display: none;
 }
 
