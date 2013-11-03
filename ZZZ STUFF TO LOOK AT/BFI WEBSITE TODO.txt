@@ -5,13 +5,14 @@ FOR ARTICLES, ETC.
 FOR TRIMTAB:
 - make custom ui for adding relations
 - figure out how to export to html email
+- make dashboard for Trimtab - listing trimtabs, adding content, etc.
+- copy relation-making code for making new trimtab entries.
 
 FOR BF CHALLENGE REVIEW PROCESS:
-- figure out workflow for payment of fee via paypal
-- make review dashboards for reviewers and bfc admin
 - tweak access permissions, etc.
 - make actions to set round, and etc.
 
 META TO DO
 - figure out exporting HTML emails for CiviCRM
 - start building backend for Idea Index
+- make new view of payments
