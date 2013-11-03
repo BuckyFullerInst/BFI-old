@@ -8,12 +8,10 @@ FOR TRIMTAB:
 
 FOR BF CHALLENGE REVIEW PROCESS:
 - figure out workflow for payment of fee via paypal
-- make review dashboards for reviewers and bcc admin
-- make vbo way to bulk add reviewers to projects in dashboards
+- make review dashboards for reviewers and bfc admin
 - tweak access permissions, etc.
-- make actions to assign reviewers, set round, and etc.
+- make actions to set round, and etc.
 
 META TO DO
 - figure out exporting HTML emails for CiviCRM
-- figure out payment for Challenge
 - start building backend for Idea Index

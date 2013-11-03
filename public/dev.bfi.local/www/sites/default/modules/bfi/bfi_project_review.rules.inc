@@ -119,6 +119,40 @@ function bfi_project_review_rules_action_info() {
 			),
 		),
 
+		'bfi_project_review_action_assign_reviewer_bulk' => array(
+			'label' => t('Bulk Assign Projects to Reviewer'),
+			'group' => t('BFI Custom'),
+			'parameter' => array(
+				'project' => array(			// Name of the parameter to be supplied via Rules UI
+					'type' => 'node',		// Specifying type of entity to be passed
+					'label' => t('Project'),
+					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
+				),
+				'reviewer' => array(			// Name of the parameter to be supplied via Rules UI
+					'type' => 'user',		// Specifying type of entity to be passed
+					'label' => t('Reviewer'),
+					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
+				),
+			),
+		),
+
+		'bfi_project_review_action_take_out_reviewer_bulk' => array(
+			'label' => t('Bulk Remove Projects from Reviewer'),
+			'group' => t('BFI Custom'),
+			'parameter' => array(
+				'project' => array(			// Name of the parameter to be supplied via Rules UI
+					'type' => 'node',		// Specifying type of entity to be passed
+					'label' => t('Project'),
+					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
+				),
+				'reviewer' => array(			// Name of the parameter to be supplied via Rules UI
+					'type' => 'user',		// Specifying type of entity to be passed
+					'label' => t('Reviewer'),
+					//'save' => TRUE,			// Only set this if need to save entity once done w/ it
+				),
+			),
+		),
+
 		'bfi_project_review_action_dpm_project' => array(
 			'label' => t('DPM all project stuff'),
 			'group' => t('BFI Custom'),
@@ -135,6 +169,46 @@ function bfi_project_review_rules_action_info() {
 	);
 
 	return $actions;
+}
+
+function bfi_project_review_assign_reviewer_common($project, $reviewer) {
+	$rids = relation_query('user', $reviewer->uid)
+		->related('node', $project->nid)
+		->execute();
+	$rels = entity_load('relation', array_keys($rids));
+	if (!count($rels)) {				// Only do below if no review rels exist yet
+		$endpoints = array(				// Adding review relation
+			array('entity_type' => 'user', 'entity_id' => $reviewer->uid),
+			array('entity_type' => 'node', 'entity_id' => $project->nid),
+		);
+		$rid = relation_insert('bfc_reviewer_assignment', $endpoints);
+		drupal_set_message('<i>'.$reviewer->name.'</i> has been assigned to <i>'.$project->title.'</i>.');
+	} else drupal_set_message('Sorry, <i>'.$reviewer->name.'</i> has already been assigned to <i>'.$project->title.'</i>.', 'error');
+}
+
+function bfi_project_review_take_out_reviewer_common($project, $reviewer) {
+	$rids = relation_query('user', $reviewer->uid)
+		->related('node', $project->nid)
+		->execute();
+	$rels = entity_load('relation', array_keys($rids));
+	if (count($rids)) {				// Only do below if review rel(s) exist already
+		$rel_wrapper = entity_metadata_wrapper('relation', reset($rels));
+		relation_delete($rel_wrapper->rid->value());
+		$review_query = new EntityFieldQuery();
+		$review_query
+			->entityCondition('entity_type', 'relation')
+			->propertyCondition('relation_type', 'bfc_evaluation');
+		$reviews_all = $review_query->execute();
+		foreach ($reviews_all['relation'] as $key => $value) {
+			$review_rel = entity_load('relation', array($value->rid));
+			foreach($review_rel as $key2 => $review) {
+				if (($reviewer->uid == $review->uid) && ($project->nid == $review->endpoints[LANGUAGE_NONE][1]['entity_id'])) {
+					relation_delete($review->rid);
+				}
+			}
+		}
+		drupal_set_message('<i>'.$reviewer->name.'</i> has been removed from <i>'.$project->title.'</i>.');
+	} else drupal_set_message('Sorry, <i>'.$reviewer->name.'</i> is not assigned to <i>'.$project->title.'</i> yet.', 'error');
 }
 
 function bfi_project_review_tally_criteria(&$field) {
@@ -334,45 +408,20 @@ function bfi_project_review_action_attach_project_to_user($project) {
 
 function bfi_project_review_action_assign_reviewer_if_not($reviewer) {
 	$project = menu_get_object();
-	$rids = relation_query('user', $reviewer->uid)
-		->related('node', $project->nid)
-		->execute();
-	$rels = entity_load('relation', array_keys($rids));
-	if (!count($rels)) {				// Only do below if no review rels exist yet
-		$endpoints = array(				// Adding review relation
-			array('entity_type' => 'user', 'entity_id' => $reviewer->uid),
-			array('entity_type' => 'node', 'entity_id' => $project->nid),
-		);
-		$rid = relation_insert('bfc_reviewer_assignment', $endpoints);
-		drupal_set_message('<i>'.$reviewer->name.'</i> has been assigned to <i>'.$project->title.'</i>.');
-	} else drupal_set_message('Sorry, <i>'.$reviewer->name.'</i> has already been assigned to <i>'.$project->title.'</i>.', 'error');
+	bfi_project_review_assign_reviewer_common($project, $reviewer);
 }
 
 function bfi_project_review_action_take_out_reviewer($reviewer) {
 	$project = menu_get_object();
-	$rids = relation_query('user', $reviewer->uid)
-		->related('node', $project->nid)
-		->execute();
-	$rels = entity_load('relation', array_keys($rids));
-	if (count($rids)) {				// Only do below if review rel(s) exist already
-		$rel_wrapper = entity_metadata_wrapper('relation', reset($rels));
-		relation_delete($rel_wrapper->rid->value());
-		$review_query = new EntityFieldQuery();
-		$review_query
-			->entityCondition('entity_type', 'relation')
-			->propertyCondition('relation_type', 'bfc_evaluation');
-		$reviews_all = $review_query->execute();
-		foreach ($reviews_all['relation'] as $key => $value) {
-			$review_rel = entity_load('relation', array($value->rid));
-			foreach($review_rel as $key2 => $review) {
-				if (($reviewer->uid == $review->uid) && ($project->nid == $review->endpoints[LANGUAGE_NONE][1]['entity_id'])) {
-					relation_delete($review->rid);
-				}
-			}
-		}
-		drupal_set_message('<i>'.$reviewer->name.'</i> has been removed from <i>'.$project->title.'</i>.');
-	} else drupal_set_message('Sorry, <i>'.$reviewer->name.'</i> is not assigned to <i>'.$project->title.'</i> yet.', 'error');
+	bfi_project_review_take_out_reviewer_common($project, $reviewer);
+}
 
+function bfi_project_review_action_assign_reviewer_bulk($project, $reviewer) {
+	bfi_project_review_assign_reviewer_common($project, $reviewer);
+}
+
+function bfi_project_review_action_take_out_reviewer_bulk($project, $reviewer) {
+	bfi_project_review_take_out_reviewer_common($project, $reviewer);
 }
 
 function bfi_project_review_action_dpm_project() {

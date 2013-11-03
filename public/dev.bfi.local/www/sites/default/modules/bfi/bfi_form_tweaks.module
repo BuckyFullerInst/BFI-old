@@ -35,6 +35,14 @@ function bfi_form_tweaks_form_alter(&$form, &$form_state, $form_id) {
 
 }
 
+function bfi_form_tweaks_field_widget_form_alter(&$element, &$form_state, $context) {
+  dpm ("\n bfi_field_widget_form_alter");
+  dpm ("\n element: ");
+  dpm ($element);
+  dpm ("\n widget type: ");
+  dpm ($context['instance']['widget']['type']);
+}
+
 $mod_name = 'bfi_form_tweaks';
 $path = drupal_get_path('module', $mod_name).'/css/'.$mod_name.'.css';
 // Currently set to inline b/c the css file reference wouldn't work for some reason. Not ideal. Debug this when have time.
