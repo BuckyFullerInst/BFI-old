@@ -1,15 +1,20 @@
-FOR TRIMTAB ITEMS:
-- On creating/editing item: make sure if adding newly to section, create reference from trim tab issue in correct node reference field, based on taxonomy term selected
-- On adding item within trim tab issue form: if/when switching sections, make sure in rules to switch over item's taxonomy terms, too…
+FOR ARTICLES, ETC.
+- Make box with different tag types
+- Make social tag box
 
-- make vbo way to bulk add reviewers to projects
-- reset relations for review on assignation
+FOR TRIMTAB:
+- make custom ui for adding relations
+- figure out how to export to html email
+- make dashboard for Trimtab - listing trimtabs, adding content, etc.
+- copy relation-making code for making new trimtab entries.
 
+FOR BF CHALLENGE REVIEW PROCESS:
+- tweak access permissions, etc.
+- make actions to set round, and etc.
+- set up emails for stages in app process
 
-Challenge Projects:
-- Figure out why relation not being fetched at all - stuff to try:
--- fetch by id
--- switch to dev
--- adding variable to reviewer relationship to get via regular node field - combining ids?
--- reducing cached refs to just the one, to help w/ selections
--- 
+META TO DO
+- figure out exporting HTML emails for CiviCRM
+- start building backend for Idea Index
+- make new view of payments
+- write php for dashboard views - #'s of reviews for challenge, #'s of items for trim tab sections

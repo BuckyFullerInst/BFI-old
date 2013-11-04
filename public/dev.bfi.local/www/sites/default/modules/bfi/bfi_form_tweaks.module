@@ -35,18 +35,35 @@ function bfi_form_tweaks_form_alter(&$form, &$form_state, $form_id) {
 
 }
 
+/*
+function bfi_form_tweaks_field_widget_form_alter(&$element, &$form_state, $context) {
+  dpm ("\n bfi_field_widget_form_alter");
+  dpm ("\n element: ");
+  dpm ($element);
+  dpm ("\n widget type: ");
+  dpm ($context['instance']['widget']['type']);
+}
+*/
+
 $mod_name = 'bfi_form_tweaks';
 $path = drupal_get_path('module', $mod_name).'/css/'.$mod_name.'.css';
 // Currently set to inline b/c the css file reference wouldn't work for some reason. Not ideal. Debug this when have time.
 $inline = '
 form div.field-name-field-project-review-r1-in,
 form div.field-name-field-project-review-r2-in,
-form div.field-name-field-project-review-r3-in {
+form div.field-name-field-project-review-r3-in,
+form div.field-name-field-project-review-score-rds {
   display: none !important;
 }
 
 div.view-bfc-project-review-form-block div.entityform-type-entityform-type {
   display: none !important;
+}
+
+div#payment-method-wrapper table tr.payment-line_item-total,
+div#payment-method-wrapper div.field-name-field-payment-type,
+div#payment-method-wrapper div.field-name-field-payment-app-id {
+  display: none;
 }
 
 body.fubik div.form-item div.description {
