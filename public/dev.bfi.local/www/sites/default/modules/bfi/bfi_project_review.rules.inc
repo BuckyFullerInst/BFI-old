@@ -375,7 +375,7 @@ function bfi_project_review_action_attach_project_to_user($project) {
 	$app = entity_load('field_collection_item', array($project->field_application_questions[LANGUAGE_NONE][0]['value']));
 	foreach ($app as $value) {
 		$app_email = $value->field_project_app_contact_email[LANGUAGE_NONE][0]['email'];
-		$app_name = ucfirst(strtolower($value->field_project_app_contact_name[LANGUAGE_NONE][0]['safe']['given'])).ucfirst(strtolower($value->field_project_app_contact_name[LANGUAGE_NONE][0]['safe']['family']));
+		$app_name = ucfirst(strtolower($value->field_project_app_contact_name[LANGUAGE_NONE][0]['safe']['given'])).' '.ucfirst(strtolower($value->field_project_app_contact_name[LANGUAGE_NONE][0]['safe']['family']));
 		$app_pass = user_password(8);
 	}
 	$user_query = new EntityFieldQuery();

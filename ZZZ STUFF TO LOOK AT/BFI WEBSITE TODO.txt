@@ -11,8 +11,10 @@ FOR TRIMTAB:
 FOR BF CHALLENGE REVIEW PROCESS:
 - tweak access permissions, etc.
 - make actions to set round, and etc.
+- set up emails for stages in app process
 
 META TO DO
 - figure out exporting HTML emails for CiviCRM
 - start building backend for Idea Index
 - make new view of payments
+- write php for dashboard views - #'s of reviews for challenge, #'s of items for trim tab sections
