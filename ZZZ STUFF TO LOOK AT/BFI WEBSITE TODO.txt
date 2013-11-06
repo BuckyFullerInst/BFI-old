@@ -3,18 +3,18 @@ FOR ARTICLES, ETC.
 - Make social tag box
 
 FOR TRIMTAB:
-- make custom ui for adding relations
 - figure out how to export to html email
-- make dashboard for Trimtab - listing trimtabs, adding content, etc.
-- copy relation-making code for making new trimtab entries.
+- relation add ui works for now, but need to make custom integrate bfi version
 
 FOR BF CHALLENGE REVIEW PROCESS:
 - tweak access permissions, etc.
-- make actions to set round, and etc.
+- make actions/content to set round, and etc.
 - set up emails for stages in app process
 
 META TO DO
 - figure out exporting HTML emails for CiviCRM
 - start building backend for Idea Index
 - make new view of payments
-- write php for dashboard views - #'s of reviews for challenge, #'s of items for trim tab sections
+
+- figure out why can't link to projects in payments
+- make rules for changing stages of challenge cycle

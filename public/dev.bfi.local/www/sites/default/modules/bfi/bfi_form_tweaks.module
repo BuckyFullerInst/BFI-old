@@ -56,7 +56,8 @@ form div.field-name-field-project-review-score-rds {
   display: none !important;
 }
 
-div.view-bfc-project-review-form-block div.entityform-type-entityform-type {
+div.view-bfc-project-review-form-block div.entityform-type-entityform-type,
+div.view-bfc-project-review-form-block form.entitytype-bfc_project_review-form div.submissions-link {
   display: none !important;
 }
 
@@ -70,3 +71,4 @@ body.fubik div.form-item div.description {
   bottom: 110%;
 }';
 drupal_add_css($inline, array('type'=>'inline', 'group' => CSS_DEFAULT, 'every_page' => TRUE));
+drupal_add_css('//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css', array('group' => CSS_THEME, 'type' => 'external'));

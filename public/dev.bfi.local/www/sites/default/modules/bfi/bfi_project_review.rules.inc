@@ -348,12 +348,14 @@ function bfi_project_review_action_ensure_unique_project($app) {
 	$projects = $project_query->execute();
 	foreach ($projects as $list) {
 		foreach ($list as $project) {			// Loop through each submitted project
-			$curr_project = node_load($project->nid);
-			$field_coll = entity_load('field_collection_item', array($curr_project
-				->field_application_questions[LANGUAGE_NONE][0]['value']));
-			foreach ($field_coll as $value) {		// Check for email address
-				if ($value->field_project_app_contact_email[LANGUAGE_NONE][0]['email'] == $app_email) {
-					$return++;
+				$curr_project = node_load($project->nid);
+			if ($curr_project->type == 'project') {
+				$field_coll = entity_load('field_collection_item', array($curr_project
+					->field_application_questions[LANGUAGE_NONE][0]['value']));
+				foreach ($field_coll as $value) {		// Check for email address
+					if ($value->field_project_app_contact_email[LANGUAGE_NONE][0]['email'] == $app_email) {
+						$return++;
+					}
 				}
 			}
 		}
