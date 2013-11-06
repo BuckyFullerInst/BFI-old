@@ -15,3 +15,6 @@ META TO DO
 - figure out exporting HTML emails for CiviCRM
 - start building backend for Idea Index
 - make new view of payments
+
+- figure out why can't link to projects in payments
+- make rules for changing stages of challenge cycle
