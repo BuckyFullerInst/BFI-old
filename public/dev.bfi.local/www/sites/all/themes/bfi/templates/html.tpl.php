@@ -41,7 +41,6 @@
   <title><?php print $head_title; ?></title>
   
   <?php print $styles; ?>
-  <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
   <?php print $scripts; ?>
   
   <?php // Eenable HTML5 elements in IE ?>

@@ -3,14 +3,19 @@ FOR ARTICLES, ETC.
 - Make social tag box
 
 FOR TRIMTAB:
-- make custom ui for adding relations
 - figure out how to export to html email
+- relation add ui works for now, but need to make custom integrate bfi version
 
 FOR BF CHALLENGE REVIEW PROCESS:
-- make review dashboards for reviewers and bcc admin
-- make vbo way to bulk add reviewers to projects in dashboards
 - tweak access permissions, etc.
-- make function for assigning accepted applicant new (or pre-existing) user account
+- make actions/content to set round, and etc.
+- set up emails for stages in app process
 
-OVERALL
-- get location zip codes installed
+META TO DO
+- figure out exporting HTML emails for CiviCRM
+- start building backend for Idea Index
+- make new view of payments
+
+- figure out why can't link to projects in payments
+- make rules for changing stages of challenge cycle
+- make validation for name fields on project entry
