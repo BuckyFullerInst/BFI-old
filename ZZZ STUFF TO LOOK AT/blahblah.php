@@ -1,65 +1,21 @@
 <?php
-	$app_id = $data->field_field_payment_app_id[0]['raw']['value']);
-	$apps = entity_load('entityform', $app);
-	foreach ($apps as $app) {
-		dpm($app);
-	}
-?>
+	$node = menu_get_object();
+	if ($node->type == 'project') {
+		$node_id = $node->nid;
+		$user_id = $data->uid;
+		$rel_ids = relation_query('user', $user_id)
+			->related('node', $node_id)
+			->execute();
+		$rels = entity_load('relation', array_keys($rel_ids));
+		if (count($rels) == 1) {
+			$value = 1;
+			$rel_wrapper = entity_metadata_wrapper('relation', reset($rels)); // Wrapping fetch relation with Entity API wrapper (https://drupal.org/node/1021556)
 
-<?php
-	$nid = $data->nid;
-	$b = $t = $r = $e = 0;
-
-	$rel_rids = relation_query('node', $nid)->execute();
-	$rels = entity_load('relation', array_keys($rel_rids));
-	if (isset($rels) && $rels) {
-		$result = array();
-		foreach ($rels as $key => $rel) {
-			$rel_wrapper = entity_metadata_wrapper('relation', $rel); // Wrapping fetch relation with Entity API wrapper
-			if ($rel->relation_type == 'trimtab_includes') {
-				if ($rel_wrapper->field_newsletter_item_section->value()->tid == 8) $b++;
-				if ($rel_wrapper->field_newsletter_item_section->value()->tid == 9) $t++;
-				if ($rel_wrapper->field_newsletter_item_section->value()->tid == 10) $r++;
-				if ($rel_wrapper->field_newsletter_item_section->value()->tid == 11) $e++;
-			}
-		}
-	}
-	echo $b.'.'.$t.'.'.$r.'.'.$e;
-?>
-
-
-<?php
-	$ass_val = $view->style_plugin->rendered_fields[$view->row_index]['php_4'];
-	if ($ass_val) {
-		$all = explode('.', $ass_val);
-		echo $all[0];
-	}
-?>
-
-
-<?php
-	echo $view->style_plugin->rendered_fields[$view->row_index]['php']+
-	$view->style_plugin->rendered_fields[$view->row_index]['php_1']+
-	$view->style_plugin->rendered_fields[$view->row_index]['php_2']+
-	$view->style_plugin->rendered_fields[$view->row_index]['php_3'];
-?>
-
-
-<?php
-	$node = node_load($data->nid);
-	$ass_val = $view->style_plugin->rendered_fields[$view->row_index]['php_4'];
-	if ($ass_val) {
-		$all = explode('.', $ass_val);
-		$r3 = explode('-', $all[2]);
-		if ($r3[0]) {
-			if (!$r3[1] && ($node->field_project_round['und'][0]['value'] == 1
-				|| $node->field_project_round['und'][0]['value'] == 2)) echo '-';
-			else {
-				if ($r3[0] == $r3[1]) echo '<i class="icon-check-sign"></i>';
-				else echo $r3[1].'/'.$r3[0];
-			}
-		} else {
-			echo '-';
-		}
+			// Tallying up round 1
+			if ($rel_wrapper->field_project_review_jury_auth->value()) {
+				if ($rel_wrapper->field_project_review_r1_in->value()) print '<i class="icon-check-sign"></i>';
+				else print '<i class="icon-check-minus"></i>';
+			} else print '<i class="icon-check-empty"></i>';
+		} else print 'N/A';
 	}
 ?>

@@ -310,6 +310,10 @@ function bfi_project_review_action_review_in($project) {
 				$user_rel_wrapper->field_project_review_r3_in->set(1);
 				$user_rel_wrapper->save();
 				break;
+			case 4;
+				$user_rel_wrapper->field_project_review_jury_in->set(1);
+				$user_rel_wrapper->save();
+				break;
 		}
 		bfi_project_review_average_criteria_scores($project, $curr_round);
 	}
