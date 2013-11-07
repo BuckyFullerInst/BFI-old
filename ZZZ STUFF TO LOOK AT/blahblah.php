@@ -1,4 +1,12 @@
 <?php
+	$app_id = $data->field_field_payment_app_id[0]['raw']['value']);
+	$apps = entity_load('entityform', $app);
+	foreach ($apps as $app) {
+		dpm($app);
+	}
+?>
+
+<?php
 	$nid = $data->nid;
 	$b = $t = $r = $e = 0;
 

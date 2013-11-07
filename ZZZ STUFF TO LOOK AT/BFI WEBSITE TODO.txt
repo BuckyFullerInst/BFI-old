@@ -18,3 +18,4 @@ META TO DO
 
 - figure out why can't link to projects in payments
 - make rules for changing stages of challenge cycle
+- make validation for name fields on project entry

@@ -56,6 +56,7 @@ form div.field-name-field-project-review-score-rds {
   display: none !important;
 }
 
+
 div.view-bfc-project-review-form-block div.entityform-type-entityform-type,
 div.view-bfc-project-review-form-block form.entitytype-bfc_project_review-form div.submissions-link {
   display: none !important;
