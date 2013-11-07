@@ -199,13 +199,15 @@ function bfi_project_review_take_out_reviewer_common($project, $reviewer) {
 			->entityCondition('entity_type', 'relation')
 			->propertyCondition('relation_type', 'bfc_evaluation');
 		$reviews_all = $review_query->execute();
-		foreach ($reviews_all['relation'] as $key => $value) {
-			$review_rel = entity_load('relation', array($value->rid));
-			foreach($review_rel as $key2 => $review) {
-				if (($reviewer->uid == $review->uid) && ($project->nid == $review->endpoints[LANGUAGE_NONE][1]['entity_id'])) {
-					relation_delete($review->rid);
+		if (isset($reviews_all['relation'])) {
+			foreach ($reviews_all['relation'] as $key => $value) {
+				$review_rel = entity_load('relation', array($value->rid));
+				foreach($review_rel as $key2 => $review) {
+					if (($reviewer->uid == $review->uid) && ($project->nid == $review->endpoints[LANGUAGE_NONE][1]['entity_id'])) {
+						relation_delete($review->rid);
+					}
 				}
-			}
+			}			
 		}
 		drupal_set_message('<i>'.$reviewer->name.'</i> has been removed from <i>'.$project->title.'</i>.');
 	} else drupal_set_message('Sorry, <i>'.$reviewer->name.'</i> is not assigned to <i>'.$project->title.'</i> yet.', 'error');
