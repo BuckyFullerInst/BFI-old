@@ -432,7 +432,3 @@ function bfi_project_review_action_dpm_project() {
 		dpm($node);
 	}
 }
-
-
-
-
