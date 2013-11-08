@@ -15,3 +15,4 @@ META TO DO
 - figure out exporting HTML emails for CiviCRM
 - start building backend for Idea Index
 - make rules for changing stages of challenge cycle
+- continue ripping out div-based html for trimtab html

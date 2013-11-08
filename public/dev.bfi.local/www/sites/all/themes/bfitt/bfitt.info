@@ -37,8 +37,6 @@ regions[help] = Help
 regions[page_top] = Page top
 regions[page_bottom] = Page bottom
 
-regions[featured] = Featured
-regions[highlighted] = Highlighted
 regions[content_top] = Content top
 regions[content] = Content
 regions[content_bottom] = Content bottom
@@ -54,14 +52,14 @@ regions[footer] = Footer
 ; sub-themes must re-declare default settings.
 
 settings[sasson_show_grid] = 0
-settings[sasson_grid_width] = '960px'
-settings[sasson_columns] = '16'
+settings[sasson_grid_width] = '600px'
+settings[sasson_columns] = '12'
 settings[sasson_gutter_width] = '20px'
-settings[sasson_sidebar_first] = '4'
-settings[sasson_sidebar_second] = '4'
+settings[sasson_sidebar_first] = '3'
+settings[sasson_sidebar_second] = '3'
 
 settings[sasson_responsive] = 1
-settings[sasson_responsive_approach] = 'desktop_first'
+settings[sasson_responsive_approach] = 'mobile_first'
 settings[sasson_responsive_narrow] = '960px'
 settings[sasson_responsive_narrower] = '767px'
 settings[sasson_responsive_narrowest] = '480px'
@@ -89,7 +87,7 @@ settings[sasson_ie_comments] = 1
 settings[sasson_prompt_cf] = 'IE 7'
 
 settings[sasson_watcher] = 0
-settings[sasson_watch_file] = 'sites/all/themes/bfi/styles/bfi.scss'
+settings[sasson_watch_file] = 'sites/all/themes/bfi/styles/bfitt.scss'
 settings[sasson_instant_watcher] = 1
 settings[sasson_overlay] = 0
 settings[sasson_overlay_url] = ''
@@ -103,6 +101,8 @@ settings[sasson_breadcrumb_hideonlyfront] = 1
 settings[sasson_breadcrumb_showtitle] = 0
 settings[sasson_breadcrumb_separator] = '»'
 settings[sasson_feed_icons] = 0
+
+whitelist[stylesheets][] = "*/bfitt.scss"
 
 ; Information added by drupal.org packaging script on 2012-08-31
 version = "7.x-2.6"
